@@ -1,2 +1,0 @@
-# parsasalehigames.github.io
-Portfolio
