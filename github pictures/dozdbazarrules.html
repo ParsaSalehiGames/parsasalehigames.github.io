@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راهنمای سریع بازی بازار دزدها (تک‌صفحه A4)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #000000;
+            padding: 10px 0;
+        }
+
+        .no-print-bar {
+            position: sticky;
+            top: 5px;
+            z-index: 1000;
+            background: #ffffff;
+            border: 2px solid #000000;
+            padding: 8px 18px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 210mm;
+            margin: 0 auto 10px auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-print {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 5px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .btn-print:hover { background: #333333; }
+
+        /* Strict Single-Page A4 Container (Total height strictly under 285mm) */
+        .a4-sheet {
+            width: 210mm;
+            height: 295mm;
+            margin: 0 auto;
+            padding: 5mm 8mm;
+            background: #ffffff;
+            border: 1.5px solid #000000;
+            box-shadow: 0 0 12px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 2px;
+            margin-bottom: 3px;
+        }
+
+        header h1 {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #000000;
+        }
+
+        .meta-tags {
+            font-size: 0.68rem;
+            font-weight: 700;
+            display: flex;
+            gap: 8px;
+        }
+
+        .section-box {
+            border: 1px solid #000000;
+            border-radius: 3px;
+            padding: 4px 6px;
+            margin-bottom: 3.5px;
+            background: #ffffff;
+            font-size: 0.67rem;
+            line-height: 1.3;
+        }
+
+        .section-title {
+            font-weight: 900;
+            font-size: 0.72rem;
+            border-bottom: 1px dashed #666;
+            padding-bottom: 1px;
+            margin-bottom: 3px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4px;
+        }
+
+        .char-item {
+            border: 1px solid #333;
+            border-radius: 3px;
+            padding: 2.5px 4px;
+            background: #fafafa;
+        }
+
+        .char-item strong {
+            font-size: 0.69rem;
+            display: block;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 1.5px;
+        }
+
+        ul, ol {
+            margin-right: 12px;
+        }
+        li {
+            margin-bottom: 1px;
+        }
+
+        /* Prominent Round Tracker Bar */
+        .round-tracker-container {
+            border: 2px solid #000000;
+            background: #f8fafc;
+            border-radius: 4px;
+            padding: 4px 6px;
+            margin-top: 2px;
+        }
+
+        .round-tracker-title {
+            font-size: 0.7rem;
+            font-weight: 900;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        .round-boxes {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 2px;
+            width: 100%;
+        }
+
+        .r-box {
+            height: 7.5mm;
+            border: 1.2px solid #000000;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.68rem;
+            font-weight: 900;
+            border-radius: 2px;
+        }
+
+        .r-box-final {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+            body {
+                background: none;
+                padding: 0;
+            }
+            .no-print-bar {
+                display: none !important;
+            }
+            .a4-sheet {
+                border: none;
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+                max-height: 297mm;
+                padding: 6mm 8mm;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-bar">
+        <div>
+            <strong style="font-size: 0.95rem;">📜 راهنمای سریع و آموزش ۳ دقیقه‌ای بازی «بازار دزدها»</strong>
+            <span style="font-size: 0.75rem; color: #555; margin-right: 10px;">شامل راندشمار ۱۵ تایی تضمینی در ۱ صفحه A4</span>
+        </div>
+        <button class="btn-print" onclick="window.print()">🖨️ چاپ مستقیم / ذخیره به PDF</button>
+    </div>
+
+    <!-- STRICT SINGLE PAGE A4 -->
+    <div class="a4-sheet">
+        
+        <!-- Header -->
+        <header>
+            <h1>🎲 راهنمای سریع بازی: بازار دزدها (Bazar of Thieves)</h1>
+            <div class="meta-tags">
+                <span>👥 ۳ تا ۵ نفر</span>
+                <span>⏱️ ۴۵-۶۰ دقیقه</span>
+                <span>🎂 +۱۲ سال</span>
+                <span>🏆 ۱۵ راند کامل</span>
+            </div>
+        </header>
+
+        <!-- 1. Pitch & Win Condition -->
+        <div class="section-box" style="background: #f8fafc; border-width: 1.5px;">
+            <div class="section-title"><span>🎯 ۱. هدف بازی و شرایط پیروزی (در یک جمله)</span><span>شرط برد: بیشترین نقدینگی</span></div>
+            <p>در بازار دزدها هیچ امتیازی جز <strong>«پول نقد»</strong> وجود ندارد! بازی دقیقاً <strong>۱۵ راند</strong> ادامه دارد و در پایان، بازیکنی که بیشترین مجموع <strong>سکه‌های نقد و شمش‌های طلا</strong> را انباشته کرده باشد، ثروتمندترین فرد بازار و برنده بازی است.</p>
+        </div>
+
+        <!-- 2. Setup -->
+        <div class="section-box">
+            <div class="section-title"><span>🗺️ ۲. چیدمان میز در ۳۰ ثانیه (Setup)</span><span>نقشه گرید ۳×۳ حلقوی</span></div>
+            <ol>
+                <li><strong>چیدمان نقشه:</strong> کارت «کارگاه مرکزی» را وسط بگذارید و ۸ لوکیشن دیگر (۶ معدن، بانک و سمساری) را دور آن بچینید تا مربع ۳×۳ تشکیل شود. <em>(خارج شدن از یک لبه نقشه = ورود از لبه مقابل)</em>.</li>
+                <li><strong>رو کردن قراردادها:</strong> دسته ۱۰ شاهکار را بُر بزنید و <strong>۳ کارت اول</strong> را بالای نقشه رو کنید.</li>
+                <li><strong>دارایی اولیه نقش‌ها:</strong>
+                    <strong>دزد:</strong> ۳ سکه + ۲ هدف مخفی (در سمساری) | 
+                    <strong>تاجر:</strong> ۶ سکه نقد (در بانک) | 
+                    <strong>دوره‌گرد:</strong> ۰ سکه + ۲ منبع (در کارگاه مرکزی) | 
+                    <strong>صنعت‌گران:</strong> ۲ سکه + ۲ منبع تخصص + ۱ منبع شانس (در معدن خود).
+                </li>
+            </ol>
+        </div>
+
+        <!-- 3. Turn Structure -->
+        <div class="section-box" style="border-width: 1.5px;">
+            <div class="section-title"><span>🔄 ۳. ساختار هر نوبت (۱ حرکت رایگان + ۲ اکشن دلخواه)</span><span>اقتصاد نوبت</span></div>
+            <div class="grid-2col">
+                <div>
+                    <strong>فاز ۱: حرکت ۱ خانه‌ای رایگان (اجباری)</strong>
+                    <p>مهره خود را ۱ خانه افقی یا عمودی حرکت دهید. <em>(حضور در کارگاه مرکزی تنها استثنای مجاز برای ماندن است)</em>.</p>
+                </div>
+                <div>
+                    <strong>فاز ۲: انجام ۲ اکشن دلخواه از بین کارهای زیر:</strong>
+                    <ul>
+                        <li>⛏️ <strong>استخراج:</strong> برداشت ۱ کارت منبع (صنعت‌گر در تخصص ۲ کارت).</li>
+                        <li>🔨 <strong>ساخت کالا:</strong> در کارگاه مرکزی (امکان ساخت چند کالا با ۱ اکشن).</li>
+                        <li>💵 <strong>فروش کالا:</strong> در سمساری (نقد کردن کالاها + پاداش شاهکارها).</li>
+                        <li>🚶 <strong>حرکت اضافه:</strong> ۱ خانه جابجایی بیشتر روی نقشه.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Characters -->
+        <div class="section-box">
+            <div class="section-title"><span>🎭 ۴. قدرت‌های ویژه شخصیت‌ها</span><span>نقش‌های ۴ گانه</span></div>
+            <div class="grid-2col" style="gap: 4px;">
+                <div class="char-item">
+                    <strong>🦹‍♂️ دزد (The Thief) — حضور الزامی</strong>
+                    <p>• <strong>جیب‌بری:</strong> با ۱ اکشن، ۱ منبع خام از بازیکن هم‌خانه می‌دزدد.<br>
+                    • <strong>باج‌گیری:</strong> هر کس وارد خانه دزد شود، باید ۱ سکه باج بدهد.<br>
+                    • <strong>سرقت بانک:</strong> ۱ اکشن (شیر یا خط ⬅️ برد: +۷ سکه / باخت: -۲ سکه).<br>
+                    • <strong>مال‌خری:</strong> فروش هر منبع خام دزدی در سمساری به قیمت ۱ سکه.</p>
+                </div>
+                <div class="char-item">
+                    <strong>💰 تاجر (The Merchant)</strong>
+                    <p>• <strong>سرمایه‌دار:</strong> شروع با ۶ سکه نقد.<br>
+                    • <strong>وام بانکی:</strong> دریافت ۵ سکه وام نقد فوری در بانک (بازپرداخت ۶ سکه در پایان).<br>
+                    • <strong>سود بازرگانی:</strong> به ازای هر فروش در سمساری، <strong>+۱ سکه سود اضافه</strong> می‌گیرد.</p>
+                </div>
+                <div class="char-item">
+                    <strong>🎒 دوره‌گرد (The Peddler)</strong>
+                    <p>• <strong>کوله بزرگ:</strong> سقف دست <strong>۱۲ کارت</strong> (سایر بازیکنان ۸ کارت).<br>
+                    • <strong>خرید از راه دور:</strong> با پرداخت ۲ سکه و صرف ۱ اکشن، از هر جای نقشه از سمساری منبع می‌خرد.</p>
+                </div>
+                <div class="char-item">
+                    <strong>🛠️ صنعت‌گران (آهن‌گر، نجار، شیشه‌گر، سنگ‌تراش، مهندس)</strong>
+                    <p>• <strong>استخراج ۲ برابری:</strong> در لوکیشن تخصصی با ۱ اکشن <strong>۲ کارت منبع</strong> می‌گیرند.<br>
+                    • <strong>جیب مخفی:</strong> ۱ منبع همیشه از دید و دزدی دزد مصون و پنهان است.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Blueprints & Masterpieces Summary -->
+        <div class="section-box">
+            <div class="section-title"><span>🔨 ۵. فرمول ۹ محصول و ۱۰ شاهکار</span><span>Crafting & Blueprints</span></div>
+            <div class="grid-3col" style="font-size: 0.65rem;">
+                <div>
+                    • <strong>صندلی (۵ سکه):</strong> ۲ چوب<br>
+                    • <strong>دوچرخه (۶ سکه):</strong> ۱ آهن + ۱ پلاستیک<br>
+                    • <strong>رادیو (۷ سکه):</strong> ۱ پلاستیک + ۱ الکترونیک
+                </div>
+                <div>
+                    • <strong>آینه (۸ سکه):</strong> ۱ شیشه + ۱ چوب<br>
+                    • <strong>مجسمه (۸ سکه):</strong> ۲ سنگ<br>
+                    • <strong>موتور (۱۲ سکه):</strong> ۲ آهن + ۱ الکترونیک
+                </div>
+                <div>
+                    • <strong>تلویزیون (۱۴ سکه):</strong> شیشه+پلاستیک+الکترونیک<br>
+                    • <strong>ماشین (۲۰ سکه):</strong> ۲ آهن+۱الکترونیک+۱شیشه<br>
+                    • <strong>خانه (۲۲ سکه):</strong> ۲ چوب+۱سنگ+۱شیشه
+                </div>
+            </div>
+            <p style="margin-top: 2px; font-size: 0.63rem; color: #333;">🏆 <strong>۱۰ شاهکار عمومی:</strong> تحویل جفت کالاهای مرتبط در سمساری ⬅️ دریافت <strong>۱۰+ تا ۱۶+ سکه جایزه نقدی اضافه</strong>!</p>
+        </div>
+
+        <!-- 6. Golden Rules -->
+        <div class="section-box" style="background: #fffbeb;">
+            <div class="section-title"><span>⚠️ ۶. قوانین طلایی و خط‌قرمزها</span><span>نکات کلیدی</span></div>
+            <div class="grid-2col" style="font-size: 0.65rem;">
+                <div>
+                    ۱. <strong>کارگاه مرکزی Safe Zone است:</strong> دزد حق ورود یا دزدی در آن را ندارد.<br>
+                    ۲. <strong>سقف دست:</strong> پایان نوبت حداکثر ۸ کارت (دوره‌گرد ۱۲ کارت).
+                </div>
+                <div>
+                    ۳. <strong>ممنوعیت استخراج مداوم (Anti-Camp):</strong> حداکثر ۱ بار استخراج از یک تایل در هر نوبت.<br>
+                    ۴. <strong>پایان راند ۱۵:</strong> نقدینگی = سکه‌ها + ارزش شمش‌ها + اهداف دزد - وام تاجر.
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Prominent Round Tracker -->
+        <div class="round-tracker-container">
+            <div class="round-tracker-title">
+                <span>⏱️ شمارشگر رسمی ۱۵ راند بازی (یک سکه روی شماره راند بگذارید و با پایان نوبت نفر اول، ۱ خانه جلو ببرید):</span>
+                <span>پایان بازی در خانه ۱۵</span>
+            </div>
+            <div class="round-boxes">
+                <div class="r-box">۱</div>
+                <div class="r-box">۲</div>
+                <div class="r-box">۳</div>
+                <div class="r-box">۴</div>
+                <div class="r-box">۵</div>
+                <div class="r-box">۶</div>
+                <div class="r-box">۷</div>
+                <div class="r-box">۸</div>
+                <div class="r-box">۹</div>
+                <div class="r-box">۱۰</div>
+                <div class="r-box">۱۱</div>
+                <div class="r-box">۱۲</div>
+                <div class="r-box">۱۳</div>
+                <div class="r-box">۱۴</div>
+                <div class="r-box r-box-final">۱۵ 🏁</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
