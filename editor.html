@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio CMS Editor · Parsa Salehi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Estedad:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c14;
+      --surface: #0f1624;
+      --surface-card: #141d30;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #f97316;
+      --accent-hover: #ea580c;
+      --accent-blue: #0ea5e9;
+      --accent-red: #ef4444;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --font: 'Outfit', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+
+    /* Top Sticky Action Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      background: rgba(8, 12, 20, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0c0804;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* Container & Panels */
+    .container {
+      max-width: 960px;
+      margin: 32px auto;
+      padding: 0 20px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title::before {
+      content: "[//]";
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.9rem;
+    }
+
+    /* Form Grids */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="color"] {
+      border: 1px solid var(--border);
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      background: transparent;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .project-item {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .project-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .project-index {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .img-preview-box {
+      width: 100%;
+      height: 150px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-top: 8px;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .img-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #050811;
+    }
+
+    .img-preview-box.mode-cover img {
+      object-fit: cover;
+    }
+
+    .avatar-preview-box {
+      width: 160px;
+      height: 160px;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-top: 8px;
+      background: #050811;
+    }
+
+    .avatar-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .avatar-preview-box.mode-cover img {
+      object-fit: cover;
+    }
+
+    .btn-mini {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      font-family: var(--mono);
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .btn-mini:hover {
+      background: rgba(249, 115, 22, 0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Project Gallery Manager */
+    .project-gallery-section {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .gallery-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .gallery-section-title {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+    .gallery-items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .gallery-item-card {
+      position: relative;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .gallery-item-thumb {
+      width: 100%;
+      height: 85px;
+      object-fit: cover;
+      background: #050811;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .gallery-item-thumb:hover {
+      transform: scale(1.05);
+    }
+    .gallery-item-actions {
+      padding: 4px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 15, 25, 0.9);
+      border-top: 1px solid var(--border);
+    }
+    .gallery-btn-del {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-family: var(--mono);
+    }
+    .gallery-btn-del:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* Tactical Lightbox Modal in Editor */
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lightbox-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 7, 12, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      cursor: zoom-out;
+    }
+
+    .lightbox-container {
+      position: relative;
+      z-index: 10;
+      width: 95vw;
+      max-width: 1200px;
+      height: 92vh;
+      max-height: 850px;
+      background: rgba(12, 17, 28, 0.96);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(249, 115, 22, 0.2);
+      transform: scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lightbox-modal.active .lightbox-container {
+      transform: scale(1);
+    }
+
+    .lightbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 12, 20, 0.92);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .lightbox-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+    }
+
+    .lightbox-tag {
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .lightbox-title {
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .lightbox-res {
+      color: #0ea5e9;
+      font-size: 0.75rem;
+      background: rgba(14, 165, 233, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(14, 165, 233, 0.3);
+    }
+
+    .lightbox-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lightbox-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      font-size: 0.76rem;
+      font-family: var(--mono);
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .lightbox-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .lightbox-btn.active {
+      background: var(--accent);
+      color: #0c0804;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .lightbox-btn.btn-apply-fit {
+      background: rgba(14, 165, 233, 0.15);
+      border-color: rgba(14, 165, 233, 0.4);
+      color: #0ea5e9;
+      font-weight: 600;
+    }
+    .lightbox-btn.btn-apply-fit:hover {
+      background: #0ea5e9;
+      color: #040914;
+    }
+
+    .lightbox-close {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .lightbox-close:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .lightbox-media-wrapper {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #05080e;
+      padding: 16px;
+    }
+
+    .lightbox-media-wrapper img {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 100%;
+      max-height: 100%;
+      user-select: none;
+    }
+
+    .lightbox-media-wrapper.mode-fit img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .lightbox-media-wrapper.mode-fill img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .lightbox-media-wrapper.mode-original {
+      overflow: auto;
+      display: block;
+      text-align: center;
+    }
+    .lightbox-media-wrapper.mode-original img {
+      width: auto;
+      height: auto;
+      max-width: none;
+      max-height: none;
+      margin: auto;
+    }
+
+    .lightbox-footer {
+      padding: 10px 18px;
+      background: rgba(8, 12, 20, 0.92);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--accent);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      z-index: 1000;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RTL & Persian Typography Overrides for Editor */
+    html[dir="rtl"] {
+      --font: 'Estedad', 'Vazirmatn', sans-serif;
+      --mono: 'IBM Plex Sans Arabic', 'Readex Pro', sans-serif;
+    }
+
+    html[dir="rtl"] body {
+      font-family: 'Estedad', 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    html[dir="rtl"] * {
+      letter-spacing: normal !important;
+    }
+
+    html[dir="rtl"] input,
+    html[dir="rtl"] textarea,
+    html[dir="rtl"] select,
+    html[dir="rtl"] button {
+      font-family: 'Estedad', 'Vazirmatn', sans-serif;
+    }
+
+    html[dir="rtl"] .topbar-brand,
+    html[dir="rtl"] .panel-title,
+    html[dir="rtl"] .btn {
+      font-family: 'Estedad', sans-serif;
+    }
+
+    html[dir="rtl"] .field-group label,
+    html[dir="rtl"] .tab-btn,
+    html[dir="rtl"] .badge-meta,
+    html[dir="rtl"] .preview-tag,
+    html[dir="rtl"] .toast {
+      font-family: 'IBM Plex Sans Arabic', 'Readex Pro', sans-serif !important;
+      letter-spacing: 0 !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Bar -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+        <polyline points="2 17 12 22 22 17"></polyline>
+        <polyline points="2 12 12 17 22 12"></polyline>
+      </svg>
+      <span id="editor-brand-text">PORTFOLIO CMS · ENGLISH VERSION (EN)</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary" id="btn-editor-lang" type="button" title="Switch Language Version / تغییر نسخه زبانی">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span id="editor-lang-text">ویرایش نسخه فارسی (FA)</span>
+      </button>
+      <button class="btn btn-secondary" id="btn-reset" type="button">Reset Defaults</button>
+      <a href="index.html" target="_blank" class="btn btn-secondary" id="btn-preview">Preview Site ↗</a>
+      <button class="btn btn-primary" id="btn-save" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        <span id="btn-save-text">Save & Download data.js</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Profile Photo & Avatar Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-avatar">Personal Portrait / Gamer Avatar</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label id="lbl-avatar-upload">Avatar Photo (Upload from PC or Paste URL)</label>
+            <button type="button" class="btn-mini" id="btn-inspect-avatar" title="Inspect avatar in full screen fit">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+              <span id="btn-avatar-fit-text">Fit to Screen</span>
+            </button>
+          </div>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <input type="text" id="hero-avatar" placeholder="Image URL or Base64 data" style="flex:1;">
+            <input type="file" accept="image/*" id="avatar-file-input" style="display:none;">
+            <button type="button" class="btn btn-secondary" id="btn-upload-avatar-trigger" onclick="document.getElementById('avatar-file-input').click()">
+              Upload Photo
+            </button>
+          </div>
+          <div class="avatar-preview-box" id="avatar-preview-wrap" style="cursor:pointer;" title="Click to Fit to Screen">
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--mono);">[ No Avatar ]</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label id="lbl-avatar-fit">Avatar Fit Mode</label>
+          <select id="hero-avatar-fit">
+            <option value="contain" id="opt-fit-contain">Fit to Frame (Complete Image Visible, No Cropping)</option>
+            <option value="cover" id="opt-fit-cover">Fill Frame (Zoomed / Cropped to Fill Box)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label id="lbl-hero-level">Gamer Level Badge</label>
+          <input type="text" id="hero-level" placeholder="LVL 99">
+        </div>
+        <div class="form-group">
+          <label id="lbl-hero-role">Role / Class Tag</label>
+          <input type="text" id="hero-role" placeholder="EXPERIENCE ARCHITECT">
+        </div>
+        <div class="form-group">
+          <label id="lbl-hero-server">Server / Region</label>
+          <input type="text" id="hero-server" placeholder="GLOBAL // TEHRAN">
+        </div>
+        <div class="form-group">
+          <label id="lbl-header-ping">Latency / Ping Status</label>
+          <input type="text" id="header-ping" placeholder="18ms">
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand & Header Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-header">Brand & Header</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="lbl-header-gamertag">Designer Name / GamerTag</label>
+          <input type="text" id="header-gamertag">
+        </div>
+        <div class="form-group">
+          <label id="lbl-header-status">Availability Status</label>
+          <input type="text" id="header-status">
+        </div>
+      </div>
+    </section>
+
+    <!-- Theme Colors (Orange / Red / Blue) Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-theme">Color Palette (Orange / Red / Blue)</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="lbl-theme-accent">Primary Accent (Orange)</label>
+          <div class="color-row">
+            <input type="color" id="theme-accent-color">
+            <input type="text" id="theme-accent-text" placeholder="#f97316">
+          </div>
+        </div>
+        <div class="form-group">
+          <label id="lbl-theme-red">Secondary Accent (Red)</label>
+          <div class="color-row">
+            <input type="color" id="theme-red-color">
+            <input type="text" id="theme-red-text" placeholder="#ef4444">
+          </div>
+        </div>
+        <div class="form-group">
+          <label id="lbl-theme-blue">Tertiary Accent (Blue)</label>
+          <div class="color-row">
+            <input type="color" id="theme-blue-color">
+            <input type="text" id="theme-blue-text" placeholder="#0ea5e9">
+          </div>
+        </div>
+        <div class="form-group">
+          <label id="lbl-theme-bg">Background Color (Deep Navy)</label>
+          <div class="color-row">
+            <input type="color" id="theme-bg-color">
+            <input type="text" id="theme-bg-text" placeholder="#080c14">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hero Section Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-hero">Hero Section</h2>
+      </div>
+      <div class="form-group">
+        <label id="lbl-hero-tagline">Tagline (Disciplines)</label>
+        <input type="text" id="hero-tagline">
+      </div>
+      <div class="form-group">
+        <label id="lbl-hero-headline">Main Headline</label>
+        <input type="text" id="hero-headline">
+      </div>
+      <div class="form-group">
+        <label id="lbl-hero-bio">Bio Paragraph</label>
+        <textarea id="hero-bio" rows="3"></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="lbl-hero-primary-cta">Primary CTA Label</label>
+          <input type="text" id="hero-primary-cta">
+        </div>
+        <div class="form-group">
+          <label id="lbl-hero-secondary-cta">Secondary CTA Label</label>
+          <input type="text" id="hero-secondary-cta">
+        </div>
+      </div>
+      <div class="panel-header" style="margin-top:20px;">
+        <h3 class="panel-title" id="panel-title-stats" style="font-size:1rem;">Stats Boxes (3 items)</h3>
+      </div>
+      <div class="form-grid" id="stats-inputs-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Three Disciplines / Domains Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-domains">Three Core Disciplines (Digital · Escape · Tabletop)</h2>
+      </div>
+      <div id="domains-list-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Projects Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-projects">Showcase Projects</h2>
+        <button class="btn btn-secondary" id="btn-add-project" type="button">+ Add New Project</button>
+      </div>
+      <div id="projects-list-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Technical Specs Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-specs">Technical & Design Toolkit</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="lbl-specs-title">Section Title</label>
+          <input type="text" id="specs-title">
+        </div>
+        <div class="form-group">
+          <label id="lbl-specs-subtitle">Section Subtitle</label>
+          <input type="text" id="specs-subtitle">
+        </div>
+      </div>
+      <div id="specs-categories-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Experience & Career Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-experience">Work Experience & Career History</h2>
+        <button class="btn btn-secondary" id="btn-add-experience" type="button">+ Add Career Role</button>
+      </div>
+      <div id="experience-list-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Philosophy Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-about">Design Philosophy / About</h2>
+      </div>
+      <div class="form-group">
+        <label id="lbl-about-title">Section Title</label>
+        <input type="text" id="about-title">
+      </div>
+      <div class="form-group">
+        <label id="lbl-about-subtitle">Subtitle / Core Focus</label>
+        <input type="text" id="about-subtitle">
+      </div>
+      <div class="form-group">
+        <label id="lbl-about-text">Statement / Narrative</label>
+        <textarea id="about-text" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label id="lbl-about-quote">Highlight Quote</label>
+        <input type="text" id="about-quote">
+      </div>
+    </section>
+
+    <!-- Contact & Channels Panel -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="panel-title-contact">Contact & Social Channels</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Email Address (Click-to-Copy)</label>
+          <input type="email" id="contact-email">
+        </div>
+        <div class="form-group">
+          <label>Discord Handle (Click-to-Copy)</label>
+          <input type="text" id="contact-discord">
+        </div>
+        <div class="form-group">
+          <label>Phone Number (Click-to-Copy)</label>
+          <input type="text" id="contact-phone">
+        </div>
+        <div class="form-group">
+          <label>Instagram URL</label>
+          <input type="text" id="contact-instagram">
+        </div>
+        <div class="form-group">
+          <label>GitHub URL</label>
+          <input type="text" id="contact-github">
+        </div>
+        <div class="form-group full">
+          <label id="lbl-contact-location">Location / Office Address (Click-to-Copy)</label>
+          <input type="text" id="contact-location" placeholder="Tehran Province | Tehran, Ferdows East">
+        </div>
+        <div class="form-group full">
+          <label>Footer Copyright Text</label>
+          <input type="text" id="contact-copyright">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Tactical Full-Screen Lightbox Modal for Editor -->
+  <div id="lightbox-modal" class="lightbox-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <div class="lightbox-container">
+      <div class="lightbox-header">
+        <div class="lightbox-title-wrap">
+          <span class="lightbox-tag">// ASSET INSPECTOR</span>
+          <span class="lightbox-title" id="lightbox-title">Image View</span>
+          <span class="lightbox-res" id="lightbox-res"></span>
+        </div>
+        <div class="lightbox-controls">
+          <button type="button" class="lightbox-btn active" id="btn-fit-screen" title="Scale to fit within display without cropping">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            Fit to Screen
+          </button>
+          <button type="button" class="lightbox-btn" id="btn-fill-screen" title="Fill entire screen">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+            Fill Screen
+          </button>
+          <button type="button" class="lightbox-btn" id="btn-original-size" title="100% Native Resolution">
+            1:1
+          </button>
+          <button type="button" class="lightbox-btn btn-apply-fit" id="btn-apply-fit-mode" title="Set this fit mode for the site">
+            Set Default Mode
+          </button>
+          <button type="button" class="lightbox-close" id="btn-close-lightbox" title="Close (ESC)" aria-label="Close Lightbox">
+            ✕
+          </button>
+        </div>
+      </div>
+      <div class="lightbox-media-wrapper mode-fit" id="lightbox-media-wrapper">
+        <img src="" id="lightbox-img" alt="Enlarged view">
+      </div>
+      <div class="lightbox-footer">
+        <span>Hotkeys: Press <b>ESC</b> to close · <b>F</b> to toggle Fit/Fill</span>
+        <span id="lightbox-context-info" style="color:var(--accent);">Active Target: Image</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Changes Saved</div>
+
+  <!-- Load Data -->
+  <script src="data.js"></script>
+  <script>
+    // Bilingual Editor System (English & Persian)
+    let editorLang = 'en';
+    try {
+      const savedLang = localStorage.getItem('GAMING_PORTFOLIO_EDITOR_LANG');
+      if (savedLang === 'fa' || savedLang === 'en') {
+        editorLang = savedLang;
+      }
+    } catch (e) {}
+
+    let enData = null;
+    let faData = null;
+    let currentData = null;
+
+    const ED_I18N = {
+      en: {
+        brand: "PORTFOLIO CMS · ENGLISH VERSION (EN)",
+        langToggle: "ویرایش نسخه فارسی (FA)",
+        resetBtn: "Reset Defaults",
+        previewBtn: "Preview Site ↗",
+        saveBtn: "Save & Download data.js",
+        addProject: "+ Add New Project",
+        delProject: "Delete Project",
+        projHeader: "PROJECT",
+        titleLbl: "Title",
+        categoryLbl: "Category (Discipline)",
+        genreLbl: "Genre / Sub-types",
+        roleLbl: "Role",
+        platformLbl: "Platform / Engine / Space",
+        yearLbl: "Year",
+        tagsLbl: "Tags (Comma-separated)",
+        summaryLbl: "Summary / Narrative",
+        linkLabelLbl: "Action Link Label",
+        linkUrlLbl: "Action Link URL",
+        fitModeLbl: "Artwork Fit Mode",
+        fitContain: "Fit to Frame (No Cropping)",
+        fitCover: "Fill Frame (Zoomed / Cropped)",
+        artworkLbl: "Project Artwork (Image URL or Upload from PC)",
+        uploadImg: "Upload Image",
+        fitScreen: "Fit to Screen",
+        noImg: "[ No Image Uploaded — Wireframe Fallback Will Display ]",
+        galleryHeader: "📸 Project Screenshots / Gallery",
+        galleryHint: "Upload multiple screenshots or paste image URLs",
+        addUrlBtn: "+ Add by URL",
+        uploadPhotosBtn: "+ Upload Photos",
+        captionPlaceholder: "Caption (optional)",
+        removePhoto: "Remove",
+        noScreenshots: "[ No screenshots added yet — use \"+ Upload Photos\" or \"+ Add by URL\" to add photos for this project ]",
+        catDigital: "Digital Game",
+        catEscape: "Escape Room",
+        catBoard: "Board Game",
+        progressHeader: "🎮 Development Progress & Milestone",
+        progressPercentLbl: "Progress Percentage (0 - 100%)",
+        progressStageLbl: "Current Phase / Milestone Name",
+        disciplineHeader: "DISCIPLINE",
+        accentColorLbl: "Accent Color",
+        iconStyleLbl: "Icon Style",
+        descLbl: "Description",
+        badgeLbl: "Badge",
+        specCatHeader: "Category",
+        itemsLbl: "Items (Comma-separated)",
+        statItem: "Stat",
+        valLbl: "Value / Label",
+        switchedToast: "Switched to English Editor Mode",
+        savedToast: "data.js downloaded with both EN and FA datasets! Replace it in your directory.",
+        confirmReset: "Reset all changes back to initial data.js?",
+        resetToast: "Reset to default data",
+        // Panel titles & labels
+        panelAvatar: "Personal Portrait / Gamer Avatar",
+        lblAvatarUpload: "Avatar Photo (Upload from PC or Paste URL)",
+        lblAvatarFit: "Avatar Fit Mode",
+        lblHeroLevel: "Gamer Level Badge",
+        lblHeroRole: "Role / Class Tag",
+        lblHeroServer: "Server / Region",
+        lblHeaderPing: "Latency / Ping Status",
+        panelHeader: "Brand & Header",
+        lblHeaderGamertag: "Designer Name / GamerTag",
+        lblHeaderStatus: "Availability Status",
+        panelTheme: "Color Palette (Orange / Red / Blue)",
+        lblThemeAccent: "Primary Accent (Orange)",
+        lblThemeRed: "Secondary Accent (Red)",
+        lblThemeBlue: "Tertiary Accent (Blue)",
+        lblThemeBg: "Background Color (Deep Navy)",
+        panelHero: "Hero Section",
+        lblHeroTagline: "Tagline (Disciplines)",
+        lblHeroHeadline: "Main Headline",
+        lblHeroBio: "Bio Paragraph",
+        lblHeroPrimaryCta: "Primary CTA Label",
+        lblHeroSecondaryCta: "Secondary CTA Label",
+        panelStats: "Stats Boxes (3 items)",
+        panelDomains: "Three Core Disciplines (Digital · Escape · Tabletop)",
+        panelProjects: "Showcase Projects",
+        panelSpecs: "Technical & Design Toolkit",
+        lblSpecsTitle: "Section Title",
+        lblSpecsSubtitle: "Section Subtitle",
+        panelAbout: "Design Philosophy / About",
+        lblAboutTitle: "Section Title",
+        lblAboutSubtitle: "Subtitle / Architectural Core",
+        lblAboutText: "Statement / Narrative",
+        lblAboutQuote: "Highlight Quote",
+        panelExperience: "Work Experience & Career History",
+        addExperience: "+ Add Career Role",
+        delExperience: "Delete Role",
+        expRoleLbl: "Job Title / Role",
+        expCompanyLbl: "Company / Studio",
+        expPeriodLbl: "Employment Period (e.g. 2024 - Present)",
+        expDescLbl: "Description & Achievements",
+        expTagsLbl: "Skills & Tags (Comma-separated)",
+        expImgLbl: "Role Photo / Certificate / Studio Logo (URL or Upload)",
+        lblContactLocation: "Location / Office Address (Click-to-Copy)",
+        panelContact: "Contact & Social Channels"
+      },
+      fa: {
+        brand: "سیستم مدیریت محتوا · نسخه فارسی (FA)",
+        langToggle: "Edit English Version (EN)",
+        resetBtn: "بازنشانی به پیش‌فرض",
+        previewBtn: "پیش‌نمایش سایت ↗",
+        saveBtn: "ذخیره و دانلود data.js",
+        addProject: "+ افزودن پروژه جدید",
+        delProject: "حذف پروژه",
+        projHeader: "پروژه",
+        titleLbl: "عنوان بازی / پروژه",
+        categoryLbl: "حوزه تخصصی",
+        genreLbl: "سبک / زیرمجموعه",
+        roleLbl: "نقش شما در پروژه",
+        platformLbl: "پلتفرم / انجین / محیط",
+        yearLbl: "سال ساخت",
+        tagsLbl: "تگ‌ها (با کاما جدا کنید)",
+        summaryLbl: "خلاصه سناریو و مکانیک‌ها",
+        linkLabelLbl: "متن دکمه لینک",
+        linkUrlLbl: "آدرس اینترنتی لینک",
+        fitModeLbl: "حالت نمایش تصویر (فیت / فیل)",
+        fitContain: "فیت در کادر (نمایش کامل بدون برش)",
+        fitCover: "پر کردن کادر (بزرگ‌نمایی و برش حاشیه)",
+        artworkLbl: "تصویر شاخص پروژه (لینک یا آپلود فایل)",
+        uploadImg: "آپلود تصویر",
+        fitScreen: "فیت به صفحه",
+        noImg: "[ تصویری آپلود نشده است — پیش‌فرض وایرفریم نمایش داده می‌شود ]",
+        galleryHeader: "📸 گالری تصاویر و اسکرین‌شات‌ها",
+        galleryHint: "آپلود چند تصویر هم‌زمان یا چسباندن آدرس اینترنتی عکس",
+        addUrlBtn: "+ افزودن با لینک",
+        uploadPhotosBtn: "+ آپلود تصاویر",
+        captionPlaceholder: "توضیح تصویر (اختیاری)",
+        removePhoto: "حذف",
+        noScreenshots: "[ هنوز تصویری اضافه نشده است — از دکمه‌های بالا برای افزودن تصویر استفاده کنید ]",
+        catDigital: "بازی دیجیتال",
+        catEscape: "اتاق فرار",
+        catBoard: "بردگیم",
+        progressHeader: "🎮 درصد پیشرفت و فاز ساخت پروژه",
+        progressPercentLbl: "درصد تکمیل (۰ تا ۱۰۰٪)",
+        progressStageLbl: "عنوان مرحله / فاز ساخت",
+        disciplineHeader: "شاخه تخصصی",
+        accentColorLbl: "رنگ شاخص",
+        iconStyleLbl: "نوع آیکون",
+        descLbl: "توضیحات کوتاه",
+        badgeLbl: "برچسب (بج)",
+        specCatHeader: "دسته‌بندی مهارت",
+        itemsLbl: "موارد و مهارت‌ها (با کاما جدا کنید)",
+        statItem: "آمار",
+        valLbl: "مقدار / عنوان",
+        switchedToast: "حالت ویرایش به نسخه فارسی تغییر یافت",
+        savedToast: "فایل data.js با هر دو نسخه انگلیسی و فارسی دانلود شد! آن را در پوشه پروژه جایگزین کنید.",
+        confirmReset: "آیا تمام تغییرات نسخه فارسی به تنظیمات اولیه بازگردانده شود؟",
+        resetToast: "نسخه فارسی به تنظیمات پیش‌فرض بازنشانی شد",
+        // Panel titles & labels
+        panelAvatar: "تصویر پروفایل / آواتار گیمر",
+        lblAvatarUpload: "عکس آواتار (آپلود از سیستم یا آدرس اینترنتی)",
+        lblAvatarFit: "حالت نمایش آواتار",
+        lblHeroLevel: "نشان لول گیمر (Level)",
+        lblHeroRole: "عنوان کلاس / نقش",
+        lblHeroServer: "سرور / موقعیت",
+        lblHeaderPing: "وضعیت پینگ و تأخیر",
+        panelHeader: "برند و هدر سایت",
+        lblHeaderGamertag: "نام طراح / گیمرتگ",
+        lblHeaderStatus: "وضعیت در دسترس بودن",
+        panelTheme: "پالت رنگی سایت (نارنجی / قرمز / آبی)",
+        lblThemeAccent: "رنگ اصلی (نارنجی)",
+        lblThemeRed: "رنگ فرعی (قرمز)",
+        lblThemeBlue: "رنگ سوم (آبی)",
+        lblThemeBg: "رنگ پس‌زمینه (سورمه‌ای تیره)",
+        panelHero: "بخش هدر و معرفی (Hero)",
+        lblHeroTagline: "شعار / معرفی حوزه‌ها",
+        lblHeroHeadline: "تیتر اصلی معرفی",
+        lblHeroBio: "پاراگراف بیوگرافی و معرفی",
+        lblHeroPrimaryCta: "متن دکمه اول (اکشن اصلی)",
+        lblHeroSecondaryCta: "متن دکمه دوم (ارتباط)",
+        panelStats: "باکس‌های آمار (۳ مورد)",
+        panelDomains: "سه حوزه اصلی فعالیت (دیجیتال · اتاق فرار · بردگیم)",
+        panelProjects: "پروژه‌ها و بازی‌های منتخب",
+        panelSpecs: "جعبه‌ابزار و مهارت‌های من",
+        lblSpecsTitle: "عنوان بخش مهارت‌ها",
+        lblSpecsSubtitle: "زیرعنوان بخش مهارت‌ها",
+        panelAbout: "فلسفه طراحی (About)",
+        lblAboutTitle: "عنوان بخش فلسفه طراحی",
+        lblAboutSubtitle: "زیرعنوان / هسته معماری",
+        lblAboutText: "متن بیانیه و فلسفه طراحی",
+        lblAboutQuote: "نقل قول برجسته",
+        panelExperience: "سوابق کاری و موقعیت‌های شغلی",
+        addExperience: "+ افزودن موقعیت شغلی",
+        delExperience: "حذف سابقه",
+        expRoleLbl: "عنوان سمت / نقش شغلی",
+        expCompanyLbl: "نام شرکت / استودیو",
+        expPeriodLbl: "دوره همکاری (مثلاً ۱۴۰۳ - اکنون)",
+        expDescLbl: "شرح مسئولیت‌ها و دستاوردها",
+        expTagsLbl: "مهارت‌ها و برچسب‌ها (با کاما جدا کنید)",
+        expImgLbl: "عکس مستند / سرتیفیکیت / لوگو (لینک یا آپلود)",
+        lblContactLocation: "آدرس و موقعیت مکانی (کلیک برای کپی)",
+        panelContact: "اطلاعات تماس و لینک‌های ارتباطی"
+      }
+    };
+
+    function getT() {
+      return ED_I18N[editorLang] || ED_I18N.en;
+    }
+
+    function initData() {
+      // English Data Loading
+      try {
+        const savedEn = localStorage.getItem('GAMING_DATA_LOCAL');
+        if (savedEn) {
+          const parsed = JSON.parse(savedEn);
+          if (parsed && Array.isArray(parsed.projects) && 
+              parsed.projects.length === (window.GAMING_DATA?.projects?.length || 0) &&
+              parsed.projects[0]?.id === window.GAMING_DATA?.projects[0]?.id) {
+            if (window.GAMING_DATA?.projects) {
+              parsed.projects.forEach((proj, idx) => {
+                if (!proj.progress && window.GAMING_DATA.projects[idx]?.progress) {
+                  proj.progress = JSON.parse(JSON.stringify(window.GAMING_DATA.projects[idx].progress));
+                }
+              });
+            }
+            if (parsed.contact) {
+              delete parsed.contact.linkedin;
+              delete parsed.contact.twitter;
+              if (!parsed.contact.location && window.GAMING_DATA?.contact?.location) {
+                parsed.contact.location = window.GAMING_DATA.contact.location;
+              }
+            }
+            if (!parsed.experience && window.GAMING_DATA?.experience) {
+              parsed.experience = JSON.parse(JSON.stringify(window.GAMING_DATA.experience));
+            }
+            enData = parsed;
+          }
+        }
+      } catch (e) {}
+      if (!enData) enData = JSON.parse(JSON.stringify(window.GAMING_DATA || {}));
+
+      // Persian Data Loading
+      try {
+        const savedFa = localStorage.getItem('GAMING_DATA_FA_LOCAL');
+        if (savedFa) {
+          const parsed = JSON.parse(savedFa);
+          if (parsed && Array.isArray(parsed.projects) && 
+              parsed.projects.length === (window.GAMING_DATA_FA?.projects?.length || 0) &&
+              parsed.projects[0]?.id === window.GAMING_DATA_FA?.projects[0]?.id) {
+            if (parsed.about && parsed.about.title === "دیدگاه من در طراحی بازی" && window.GAMING_DATA_FA?.about) {
+              parsed.about = JSON.parse(JSON.stringify(window.GAMING_DATA_FA.about));
+              try { localStorage.setItem('GAMING_DATA_FA_LOCAL', JSON.stringify(parsed)); } catch(e) {}
+            }
+            if (window.GAMING_DATA_FA?.projects) {
+              parsed.projects.forEach((proj, idx) => {
+                if (!proj.progress && window.GAMING_DATA_FA.projects[idx]?.progress) {
+                  proj.progress = JSON.parse(JSON.stringify(window.GAMING_DATA_FA.projects[idx].progress));
+                }
+              });
+            }
+            if (parsed.contact) {
+              delete parsed.contact.linkedin;
+              delete parsed.contact.twitter;
+              if (!parsed.contact.location && window.GAMING_DATA_FA?.contact?.location) {
+                parsed.contact.location = window.GAMING_DATA_FA.contact.location;
+              }
+            }
+            if (!parsed.experience && window.GAMING_DATA_FA?.experience) {
+              parsed.experience = JSON.parse(JSON.stringify(window.GAMING_DATA_FA.experience));
+            }
+            faData = parsed;
+          }
+        }
+      } catch (e) {}
+      if (!faData) faData = JSON.parse(JSON.stringify(window.GAMING_DATA_FA || window.GAMING_DATA || {}));
+
+      currentData = (editorLang === 'fa') ? faData : enData;
+      updateEditorLanguageUI();
+      populateForm();
+    }
+
+    function updateEditorLanguageUI() {
+      const isRtl = editorLang === 'fa';
+      const t = getT();
+
+      document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+      document.documentElement.setAttribute('lang', editorLang);
+
+      const brandEl = document.getElementById('editor-brand-text');
+      const langTextEl = document.getElementById('editor-lang-text');
+      const resetBtnEl = document.getElementById('btn-reset');
+      const previewBtnEl = document.getElementById('btn-preview');
+      const saveBtnTextEl = document.getElementById('btn-save-text');
+      const addProjBtnEl = document.getElementById('btn-add-project');
+
+      if (brandEl) brandEl.textContent = t.brand;
+      if (langTextEl) langTextEl.textContent = t.langToggle;
+      if (resetBtnEl) resetBtnEl.textContent = t.resetBtn;
+      if (previewBtnEl) previewBtnEl.textContent = t.previewBtn;
+      if (saveBtnTextEl) saveBtnTextEl.textContent = t.saveBtn;
+      if (addProjBtnEl) addProjBtnEl.textContent = t.addProject;
+
+      // Update Panel Titles & Labels
+      const setTxt = (id, text) => {
+        const el = document.getElementById(id);
+        if (el && text) el.textContent = text;
+      };
+
+      setTxt('panel-title-avatar', t.panelAvatar);
+      setTxt('lbl-avatar-upload', t.lblAvatarUpload);
+      setTxt('lbl-avatar-fit', t.lblAvatarFit);
+      setTxt('btn-avatar-fit-text', t.fitScreen);
+      setTxt('opt-fit-contain', t.fitContain);
+      setTxt('opt-fit-cover', t.fitCover);
+      setTxt('lbl-hero-level', t.lblHeroLevel);
+      setTxt('lbl-hero-role', t.lblHeroRole);
+      setTxt('lbl-hero-server', t.lblHeroServer);
+      setTxt('lbl-header-ping', t.lblHeaderPing);
+
+      setTxt('panel-title-header', t.panelHeader);
+      setTxt('lbl-header-gamertag', t.lblHeaderGamertag);
+      setTxt('lbl-header-status', t.lblHeaderStatus);
+
+      setTxt('panel-title-theme', t.panelTheme);
+      setTxt('lbl-theme-accent', t.lblThemeAccent);
+      setTxt('lbl-theme-red', t.lblThemeRed);
+      setTxt('lbl-theme-blue', t.lblThemeBlue);
+      setTxt('lbl-theme-bg', t.lblThemeBg);
+
+      setTxt('panel-title-hero', t.panelHero);
+      setTxt('lbl-hero-tagline', t.lblHeroTagline);
+      setTxt('lbl-hero-headline', t.lblHeroHeadline);
+      setTxt('lbl-hero-bio', t.lblHeroBio);
+      setTxt('lbl-hero-primary-cta', t.lblHeroPrimaryCta);
+      setTxt('lbl-hero-secondary-cta', t.lblHeroSecondaryCta);
+      setTxt('panel-title-stats', t.panelStats);
+
+      setTxt('panel-title-domains', t.panelDomains);
+      setTxt('panel-title-projects', t.panelProjects);
+
+      setTxt('panel-title-specs', t.panelSpecs);
+      setTxt('lbl-specs-title', t.lblSpecsTitle);
+      setTxt('lbl-specs-subtitle', t.lblSpecsSubtitle);
+
+      setTxt('panel-title-about', t.panelAbout);
+      setTxt('lbl-about-title', t.lblAboutTitle);
+      setTxt('lbl-about-subtitle', t.lblAboutSubtitle);
+      setTxt('lbl-about-text', t.lblAboutText);
+      setTxt('lbl-about-quote', t.lblAboutQuote);
+
+      setTxt('panel-title-experience', t.panelExperience);
+      const addExpBtnEl = document.getElementById('btn-add-experience');
+      if (addExpBtnEl) addExpBtnEl.textContent = t.addExperience;
+
+      setTxt('panel-title-contact', t.panelContact);
+      setTxt('lbl-contact-location', t.lblContactLocation);
+    }
+
+    function updateAvatarPreview() {
+      const wrap = document.getElementById('avatar-preview-wrap');
+      const val = document.getElementById('hero-avatar').value;
+      const fitSelect = document.getElementById('hero-avatar-fit');
+      const fit = fitSelect ? fitSelect.value : 'contain';
+      if (fit === 'cover') {
+        wrap.classList.add('mode-cover');
+      } else {
+        wrap.classList.remove('mode-cover');
+      }
+      if (val && val.trim() !== '') {
+        wrap.innerHTML = `<img src="${val}" alt="Avatar">`;
+      } else {
+        wrap.innerHTML = `<span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--mono);">[ No Avatar ]</span>`;
+      }
+    }
+
+    document.getElementById('avatar-file-input').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        document.getElementById('hero-avatar').value = event.target.result;
+        updateAvatarPreview();
+        saveLocal();
+        showToast(editorLang === 'fa' ? 'تصویر آواتار بارگذاری شد' : 'Avatar photo uploaded');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('hero-avatar').addEventListener('input', () => {
+      updateAvatarPreview();
+      saveLocal();
+    });
+
+    document.getElementById('hero-avatar-fit').addEventListener('change', () => {
+      updateAvatarPreview();
+      saveLocal();
+    });
+
+    function populateForm() {
+      if (!currentData) return;
+
+      // Avatar & Gamer Telemetry
+      document.getElementById('hero-avatar').value = currentData.hero?.avatar || '';
+      document.getElementById('hero-avatar-fit').value = currentData.hero?.avatarFit || 'contain';
+      updateAvatarPreview();
+      document.getElementById('hero-level').value = currentData.hero?.level || 'LVL 99';
+      document.getElementById('hero-role').value = currentData.hero?.roleTag || '';
+      document.getElementById('hero-server').value = currentData.hero?.server || '';
+      document.getElementById('header-ping').value = currentData.header?.ping || '18ms';
+
+      // Header
+      document.getElementById('header-gamertag').value = currentData.header?.gamerTag || '';
+      document.getElementById('header-status').value = currentData.header?.status || '';
+
+      // Theme Colors
+      const accent = currentData.theme?.accentColor || '#f97316';
+      document.getElementById('theme-accent-color').value = accent;
+      document.getElementById('theme-accent-text').value = accent;
+
+      const red = currentData.theme?.accentRed || '#ef4444';
+      document.getElementById('theme-red-color').value = red;
+      document.getElementById('theme-red-text').value = red;
+
+      const blue = currentData.theme?.accentBlue || '#0ea5e9';
+      document.getElementById('theme-blue-color').value = blue;
+      document.getElementById('theme-blue-text').value = blue;
+
+      const bg = currentData.theme?.bgColor || '#080c14';
+      document.getElementById('theme-bg-color').value = bg;
+      document.getElementById('theme-bg-text').value = bg;
+
+      // Hero
+      document.getElementById('hero-tagline').value = currentData.hero?.tagline || '';
+      document.getElementById('hero-headline').value = currentData.hero?.headline || '';
+      document.getElementById('hero-bio').value = currentData.hero?.bio || '';
+      document.getElementById('hero-primary-cta').value = currentData.hero?.primaryCta || '';
+      document.getElementById('hero-secondary-cta').value = currentData.hero?.secondaryCta || '';
+
+      // Stats
+      const statsContainer = document.getElementById('stats-inputs-container');
+      statsContainer.innerHTML = '';
+      const stats = currentData.hero?.stats || [];
+      const t = getT();
+      stats.forEach((st, idx) => {
+        const div = document.createElement('div');
+        div.className = 'form-group';
+        div.innerHTML = `
+          <label>${t.statItem} #${idx + 1} (${t.valLbl})</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" class="stat-val-input" data-idx="${idx}" value="${st.value}" style="width:40%;">
+            <input type="text" class="stat-lbl-input" data-idx="${idx}" value="${st.label}" style="width:60%;">
+          </div>
+        `;
+        statsContainer.appendChild(div);
+      });
+
+      renderDomainsList();
+      renderProjectsList();
+
+      // Specs
+      document.getElementById('specs-title').value = currentData.specs?.title || '';
+      document.getElementById('specs-subtitle').value = currentData.specs?.subtitle || '';
+      renderSpecsCategories();
+
+      // Experience
+      renderExperienceList();
+
+      // About
+      document.getElementById('about-title').value = currentData.about?.title || '';
+      document.getElementById('about-subtitle').value = currentData.about?.subtitle || '';
+      document.getElementById('about-text').value = currentData.about?.text || '';
+      document.getElementById('about-quote').value = currentData.about?.quote || '';
+
+      // Contact
+      document.getElementById('contact-email').value = currentData.contact?.email || '';
+      document.getElementById('contact-discord').value = currentData.contact?.discord || '';
+      document.getElementById('contact-phone').value = currentData.contact?.phone || '';
+      document.getElementById('contact-instagram').value = currentData.contact?.instagram || '';
+      document.getElementById('contact-github').value = currentData.contact?.github || '';
+      document.getElementById('contact-location').value = currentData.contact?.location || '';
+      document.getElementById('contact-copyright').value = currentData.contact?.copyright || '';
+    }
+
+    function renderDomainsList() {
+      const container = document.getElementById('domains-list-container');
+      container.innerHTML = '';
+      if (!currentData.domains) return;
+      const t = getT();
+
+      currentData.domains.forEach((d, idx) => {
+        const div = document.createElement('div');
+        div.className = 'project-item';
+        div.innerHTML = `
+          <div class="project-item-header">
+            <span class="project-index">${t.disciplineHeader} #${idx + 1}</span>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>${t.titleLbl}</label>
+              <input type="text" value="${d.title}" onchange="currentData.domains[${idx}].title = this.value; saveLocal();">
+            </div>
+            <div class="form-group">
+              <label>${t.badgeLbl}</label>
+              <input type="text" value="${d.badge}" onchange="currentData.domains[${idx}].badge = this.value; saveLocal();">
+            </div>
+            <div class="form-group">
+              <label>${t.accentColorLbl}</label>
+              <input type="text" value="${d.color}" onchange="currentData.domains[${idx}].color = this.value; saveLocal();">
+            </div>
+            <div class="form-group">
+              <label>${t.iconStyleLbl}</label>
+              <select onchange="currentData.domains[${idx}].icon = this.value; saveLocal();">
+                <option value="gamepad" ${d.icon === 'gamepad' ? 'selected' : ''}>Gamepad (${t.catDigital})</option>
+                <option value="lock" ${d.icon === 'lock' ? 'selected' : ''}>Lock (${t.catEscape})</option>
+                <option value="dice" ${d.icon === 'dice' || d.icon === 'dices' ? 'selected' : ''}>Dice & Cards (${t.catBoard})</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>${t.descLbl}</label>
+              <textarea rows="2" onchange="currentData.domains[${idx}].description = this.value; saveLocal();">${d.description}</textarea>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderProjectsList() {
+      const container = document.getElementById('projects-list-container');
+      container.innerHTML = '';
+      const t = getT();
+
+      if (!currentData.projects || currentData.projects.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem;">${editorLang === 'fa' ? 'هنوز پروژه‌ای ثبت نشده است.' : 'No projects yet.'}</p>`;
+        return;
+      }
+
+      currentData.projects.forEach((p, idx) => {
+        const item = document.createElement('div');
+        item.className = 'project-item';
+        item.innerHTML = `
+          <div class="project-item-header">
+            <span class="project-index">${t.projHeader} #${idx + 1} · [${p.category || 'Game'}]</span>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeProject(${idx})">${t.delProject}</button>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>${t.titleLbl}</label>
+              <input type="text" value="${p.title || ''}" onchange="updateProjectField(${idx}, 'title', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.categoryLbl}</label>
+              <select onchange="updateProjectField(${idx}, 'category', this.value)">
+                <option value="Digital Game" ${p.category === 'Digital Game' ? 'selected' : ''}>${t.catDigital}</option>
+                <option value="Escape Room" ${p.category === 'Escape Room' ? 'selected' : ''}>${t.catEscape}</option>
+                <option value="Board Game" ${p.category === 'Board Game' ? 'selected' : ''}>${t.catBoard}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>${t.genreLbl}</label>
+              <input type="text" value="${p.genre || ''}" onchange="updateProjectField(${idx}, 'genre', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.roleLbl}</label>
+              <input type="text" value="${p.role || ''}" onchange="updateProjectField(${idx}, 'role', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.platformLbl}</label>
+              <input type="text" value="${p.engine || ''}" onchange="updateProjectField(${idx}, 'engine', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.yearLbl}</label>
+              <input type="text" value="${p.year || ''}" onchange="updateProjectField(${idx}, 'year', this.value)">
+            </div>
+            <!-- Development Progress & Milestone -->
+            <div class="form-group full" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius); padding:12px; margin-top:2px; margin-bottom:4px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <label style="margin:0; font-weight:600; color:var(--accent-orange); font-size:0.85rem;">${t.progressHeader}</label>
+                <span id="proj-prog-badge-${idx}" style="font-family:var(--mono); font-weight:700; font-size:0.88rem; color:${(p.progress?.percent ?? 100) === 100 ? '#10b981' : 'var(--accent-orange)'};">
+                  ${p.progress?.percent ?? 100}%
+                </span>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                <div>
+                  <label style="font-size:0.75rem; margin-bottom:4px;">${t.progressPercentLbl}</label>
+                  <input type="range" min="0" max="100" step="5" value="${p.progress?.percent ?? 100}" 
+                    oninput="updateProjectProgressPercent(${idx}, this.value)"
+                    style="width:100%; cursor:pointer; accent-color:var(--accent-orange);">
+                </div>
+                <div>
+                  <label style="font-size:0.75rem; margin-bottom:4px;">${t.progressStageLbl}</label>
+                  <input type="text" value="${p.progress?.stage || ''}" 
+                    placeholder="${editorLang === 'fa' ? 'مثال: پروتوتایپ // تست اولیه' : 'e.g. Beta // Sound & Shaders'}"
+                    onchange="updateProjectProgressStage(${idx}, this.value)">
+                </div>
+              </div>
+            </div>
+            <div class="form-group full">
+              <label>${t.tagsLbl}</label>
+              <input type="text" value="${Array.isArray(p.tags) ? p.tags.join(', ') : ''}" onchange="updateProjectTags(${idx}, this.value)">
+            </div>
+            <div class="form-group full">
+              <label>${t.summaryLbl}</label>
+              <textarea rows="3" onchange="updateProjectField(${idx}, 'summary', this.value)">${p.summary || ''}</textarea>
+            </div>
+            <div class="form-group">
+              <label>${t.linkLabelLbl}</label>
+              <input type="text" value="${p.linkText || (editorLang === 'fa' ? 'مشاهده مشخصات' : 'View Breakdown')}" onchange="updateProjectField(${idx}, 'linkText', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.linkUrlLbl}</label>
+              <input type="text" value="${p.linkUrl || '#'}" onchange="updateProjectField(${idx}, 'linkUrl', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.fitModeLbl}</label>
+              <select onchange="updateProjectField(${idx}, 'fit', this.value); renderProjectsList();">
+                <option value="contain" ${p.fit !== 'cover' ? 'selected' : ''}>${t.fitContain}</option>
+                <option value="cover" ${p.fit === 'cover' ? 'selected' : ''}>${t.fitCover}</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <label>${t.artworkLbl}</label>
+                ${p.image ? `
+                <button type="button" class="btn-mini" onclick="inspectProjectImage(${idx})" title="${t.fitScreen}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                  ${t.fitScreen}
+                </button>
+                ` : ''}
+              </div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" value="${p.image || ''}" placeholder="Image URL or Base64" onchange="updateProjectField(${idx}, 'image', this.value)" style="flex:1;">
+                <input type="file" accept="image/*" onchange="handleImageUpload(${idx}, event)" style="display:none;" id="file-proj-${idx}">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('file-proj-${idx}').click()">${t.uploadImg}</button>
+              </div>
+              <div class="img-preview-box ${p.fit === 'cover' ? 'mode-cover' : 'mode-contain'}" style="cursor:pointer;" onclick="${p.image ? `inspectProjectImage(${idx})` : ''}" title="${p.image ? t.fitScreen : ''}">
+                ${p.image ? `<img src="${p.image}" alt="Preview">` : `<span style="color:var(--text-muted); font-size:0.8rem; font-family:var(--mono);">${t.noImg}</span>`}
+              </div>
+            </div>
+
+            <!-- Project Gallery Manager -->
+            <div class="form-group full project-gallery-section">
+              <div class="gallery-section-header">
+                <span class="gallery-section-title">
+                  ${t.galleryHeader} (${Array.isArray(p.gallery) ? p.gallery.length : 0})
+                </span>
+                <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--mono);">
+                  ${t.galleryHint}
+                </span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                <input type="text" id="gallery-url-input-${idx}" placeholder="URL" style="flex:1;">
+                <button type="button" class="btn btn-secondary" onclick="addGalleryUrlFromInput(${idx})">${t.addUrlBtn}</button>
+                <input type="file" accept="image/*" multiple onchange="handleGalleryUpload(${idx}, event)" style="display:none;" id="file-gallery-${idx}">
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('file-gallery-${idx}').click()">${t.uploadPhotosBtn}</button>
+              </div>
+              ${Array.isArray(p.gallery) && p.gallery.length > 0 ? `
+                <div class="gallery-items-grid">
+                  ${p.gallery.map((gItem, gIdx) => {
+                    const imgUrl = typeof gItem === 'string' ? gItem : (gItem.url || '');
+                    const caption = typeof gItem === 'object' ? (gItem.caption || '') : '';
+                    return `
+                      <div class="gallery-item-card">
+                        <img src="${imgUrl}" class="gallery-item-thumb" onclick="inspectGalleryImage(${idx}, ${gIdx})" title="${t.fitScreen}">
+                        <div class="gallery-item-actions">
+                          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-muted);">#${gIdx + 1}</span>
+                          <button type="button" class="gallery-btn-del" onclick="removeGalleryItem(${idx}, ${gIdx})">${t.removePhoto}</button>
+                        </div>
+                        <input type="text" value="${caption}" placeholder="${t.captionPlaceholder}" onchange="updateGalleryCaption(${idx}, ${gIdx}, this.value)" style="font-size:0.7rem; padding:3px 6px; border:none; border-top:1px solid var(--border); background:transparent; color:var(--text-main); font-family:var(--mono);">
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              ` : `
+                <div style="padding:12px; border:1px dashed var(--border); border-radius:var(--radius); text-align:center; color:var(--text-muted); font-size:0.8rem; font-family:var(--mono); background:rgba(0,0,0,0.15);">
+                  ${t.noScreenshots}
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    window.updateProjectField = function(idx, field, value) {
+      if (currentData.projects[idx]) {
+        currentData.projects[idx][field] = value;
+        saveLocal();
+      }
+    };
+
+    window.updateProjectTags = function(idx, value) {
+      if (currentData.projects[idx]) {
+        currentData.projects[idx].tags = value.split(',').map(s => s.trim()).filter(Boolean);
+        saveLocal();
+      }
+    };
+
+    window.updateProjectProgressPercent = function(idx, val) {
+      if (!currentData.projects[idx]) return;
+      if (!currentData.projects[idx].progress) {
+        currentData.projects[idx].progress = { percent: 100, stage: '' };
+      }
+      const num = parseInt(val, 10) || 0;
+      currentData.projects[idx].progress.percent = num;
+      const badge = document.getElementById(`proj-prog-badge-${idx}`);
+      if (badge) {
+        badge.textContent = num + '%';
+        badge.style.color = num === 100 ? '#10b981' : 'var(--accent-orange)';
+      }
+      saveLocal();
+    };
+
+    window.updateProjectProgressStage = function(idx, val) {
+      if (!currentData.projects[idx]) return;
+      if (!currentData.projects[idx].progress) {
+        currentData.projects[idx].progress = { percent: 100, stage: '' };
+      }
+      currentData.projects[idx].progress.stage = val;
+      saveLocal();
+    };
+
+    window.handleImageUpload = function(idx, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentData.projects[idx].image = e.target.result;
+        saveLocal();
+        renderProjectsList();
+        showToast(editorLang === 'fa' ? 'تصویر با موفقیت بارگذاری شد' : 'Image uploaded successfully');
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.addGalleryUrlFromInput = function(projIdx) {
+      const input = document.getElementById(`gallery-url-input-${projIdx}`);
+      if (!input || !input.value.trim()) {
+        showToast(editorLang === 'fa' ? 'لطفاً آدرس تصویر را وارد کنید' : 'Please enter an image URL');
+        return;
+      }
+      const p = currentData.projects[projIdx];
+      if (!p) return;
+      if (!Array.isArray(p.gallery)) p.gallery = [];
+      p.gallery.push({ url: input.value.trim(), caption: '' });
+      saveLocal();
+      renderProjectsList();
+      showToast(editorLang === 'fa' ? 'تصویر به گالری پروژه افزوده شد' : 'Screenshot added to project gallery');
+    };
+
+    window.handleGalleryUpload = function(projIdx, event) {
+      const files = Array.from(event.target.files || []);
+      if (files.length === 0) return;
+
+      const p = currentData.projects[projIdx];
+      if (!p) return;
+      if (!Array.isArray(p.gallery)) p.gallery = [];
+
+      let loadedCount = 0;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          p.gallery.push({ url: e.target.result, caption: file.name.replace(/\.[^/.]+$/, '') });
+          loadedCount++;
+          if (loadedCount === files.length) {
+            saveLocal();
+            renderProjectsList();
+            showToast(editorLang === 'fa' ? `${files.length} تصویر به گالری اضافه شد` : `${files.length} screenshot(s) added to gallery`);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    };
+
+    window.removeGalleryItem = function(projIdx, gIdx) {
+      const p = currentData.projects[projIdx];
+      if (!p || !Array.isArray(p.gallery)) return;
+      p.gallery.splice(gIdx, 1);
+      saveLocal();
+      renderProjectsList();
+      showToast(editorLang === 'fa' ? 'تصویر حذف شد' : 'Screenshot removed');
+    };
+
+    window.updateGalleryCaption = function(projIdx, gIdx, caption) {
+      const p = currentData.projects[projIdx];
+      if (!p || !Array.isArray(p.gallery) || !p.gallery[gIdx]) return;
+      if (typeof p.gallery[gIdx] === 'string') {
+        p.gallery[gIdx] = { url: p.gallery[gIdx], caption: caption };
+      } else {
+        p.gallery[gIdx].caption = caption;
+      }
+      saveLocal();
+    };
+
+    window.inspectGalleryImage = function(projIdx, gIdx) {
+      const p = currentData.projects[projIdx];
+      if (!p || !Array.isArray(p.gallery) || !p.gallery[gIdx]) return;
+      const item = p.gallery[gIdx];
+      const url = typeof item === 'string' ? item : item.url;
+      const caption = typeof item === 'object' ? item.caption : '';
+      const title = (p.title || `Project #${projIdx + 1}`) + ` · Photo #${gIdx + 1}` + (caption ? ` (${caption})` : '');
+      openEditorLightbox(url, title, { type: 'gallery', projIdx, gIdx }, 'contain');
+    };
+
+    window.removeProject = function(idx) {
+      const msg = editorLang === 'fa' 
+        ? `آیا از حذف پروژه شماره ${idx + 1} مطمئن هستید؟` 
+        : `Remove project #${idx + 1}?`;
+      if (confirm(msg)) {
+        currentData.projects.splice(idx, 1);
+        saveLocal();
+        renderProjectsList();
+      }
+    };
+
+    document.getElementById('btn-add-project').addEventListener('click', () => {
+      if (!currentData.projects) currentData.projects = [];
+      const isFa = editorLang === 'fa';
+      currentData.projects.push({
+        id: 'proj_' + Date.now(),
+        title: isFa ? 'عنوان بازی یا اتاق جدید' : 'New Game / Room Title',
+        category: 'Digital Game',
+        genre: isFa ? 'سبک بازی' : 'Genre / Style',
+        role: isFa ? 'طراح بازی' : 'Game Designer',
+        engine: isFa ? 'گودو ۴' : 'Godot 4',
+        year: '2026',
+        summary: isFa ? 'خلاصه داستان، سناریو و مکانیک‌های گیم‌پلی را اینجا بنویسید.' : 'Enter a concise summary of player mechanics, puzzle flow, or rulesets.',
+        image: '',
+        fit: 'contain',
+        gallery: [],
+        tags: isFa ? ['سیستمیک', 'پروتوتایپ'] : ['Systemic', 'Prototype'],
+        linkText: isFa ? 'مشاهده مشخصات' : 'View Details',
+        linkUrl: '#',
+        progress: {
+          percent: 50,
+          stage: isFa ? 'پروتوتایپ // تست مکانیک اولیه' : 'Prototype // Initial Core Mechanics'
+        }
+      });
+      saveLocal();
+      renderProjectsList();
+      showToast(isFa ? 'کارت پروژه جدید اضافه شد' : 'New project card added');
+    });
+
+    function renderSpecsCategories() {
+      const container = document.getElementById('specs-categories-container');
+      container.innerHTML = '';
+      if (!currentData.specs?.categories) return;
+      const t = getT();
+
+      currentData.specs.categories.forEach((cat, cIdx) => {
+        const div = document.createElement('div');
+        div.className = 'form-group full';
+        div.style.background = 'rgba(0,0,0,0.2)';
+        div.style.padding = '14px';
+        div.style.borderRadius = 'var(--radius)';
+        div.style.marginTop = '12px';
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <label>${t.specCatHeader} #${cIdx + 1}</label>
+          </div>
+          <input type="text" value="${cat.name}" onchange="updateSpecCategoryName(${cIdx}, this.value)" style="margin-bottom:8px;">
+          <label>${t.itemsLbl}</label>
+          <input type="text" value="${Array.isArray(cat.items) ? cat.items.join(', ') : ''}" onchange="updateSpecCategoryItems(${cIdx}, this.value)">
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    window.updateSpecCategoryName = function(idx, val) {
+      currentData.specs.categories[idx].name = val;
+      saveLocal();
+    };
+
+    window.updateSpecCategoryItems = function(idx, val) {
+      currentData.specs.categories[idx].items = val.split(',').map(s => s.trim()).filter(Boolean);
+      saveLocal();
+    };
+
+    function renderExperienceList() {
+      const container = document.getElementById('experience-list-container');
+      if (!container) return;
+      container.innerHTML = '';
+      const t = getT();
+
+      if (!currentData.experience || currentData.experience.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem;">${editorLang === 'fa' ? 'هنوز سابقه کاری ثبت نشده است.' : 'No work experience added yet.'}</p>`;
+        return;
+      }
+
+      currentData.experience.forEach((exp, idx) => {
+        const item = document.createElement('div');
+        item.className = 'project-item';
+        item.innerHTML = `
+          <div class="project-item-header">
+            <span class="project-index">#${idx + 1} · ${exp.role || 'Role'} @ ${exp.company || 'Company'}</span>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeExperience(${idx})">${t.delExperience}</button>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>${t.expRoleLbl}</label>
+              <input type="text" value="${exp.role || ''}" onchange="updateExperienceField(${idx}, 'role', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.expCompanyLbl}</label>
+              <input type="text" value="${exp.company || ''}" onchange="updateExperienceField(${idx}, 'company', this.value)">
+            </div>
+            <div class="form-group">
+              <label>${t.expPeriodLbl}</label>
+              <input type="text" value="${exp.period || ''}" onchange="updateExperienceField(${idx}, 'period', this.value)">
+            </div>
+            <div class="form-group full">
+              <label>${t.expTagsLbl}</label>
+              <input type="text" value="${Array.isArray(exp.tags) ? exp.tags.join(', ') : ''}" onchange="updateExperienceTags(${idx}, this.value)">
+            </div>
+            <div class="form-group full">
+              <label>${t.expDescLbl}</label>
+              <textarea rows="3" onchange="updateExperienceField(${idx}, 'description', this.value)">${exp.description || ''}</textarea>
+            </div>
+            <div class="form-group full">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <label>${t.expImgLbl}</label>
+                ${exp.image ? `
+                  <button type="button" class="btn-mini" onclick="inspectExperienceImage(${idx})">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                    <span>${t.fitScreen}</span>
+                  </button>
+                ` : ''}
+              </div>
+              <div style="display:flex; gap:12px; align-items:center;">
+                <input type="text" value="${exp.image || ''}" placeholder="Image URL or Base64 data" style="flex:1;" onchange="updateExperienceField(${idx}, 'image', this.value); renderExperienceList();">
+                <input type="file" accept="image/*" id="exp-file-${idx}" style="display:none;" onchange="handleExperienceImageUpload(${idx}, event)">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('exp-file-${idx}').click()">
+                  ${t.uploadImg}
+                </button>
+              </div>
+              ${exp.image ? `
+                <div style="margin-top:8px; width:140px; height:85px; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); background:#050811; cursor:pointer;" onclick="inspectExperienceImage(${idx})" title="${t.fitScreen}">
+                  <img src="${exp.image}" alt="Photo" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    window.updateExperienceField = function(idx, field, val) {
+      if (!currentData.experience || !currentData.experience[idx]) return;
+      currentData.experience[idx][field] = val;
+      saveLocal();
+    };
+
+    window.updateExperienceTags = function(idx, val) {
+      if (!currentData.experience || !currentData.experience[idx]) return;
+      currentData.experience[idx].tags = val.split(',').map(s => s.trim()).filter(Boolean);
+      saveLocal();
+    };
+
+    window.handleExperienceImageUpload = function(idx, e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (!currentData.experience || !currentData.experience[idx]) return;
+        currentData.experience[idx].image = event.target.result;
+        saveLocal();
+        renderExperienceList();
+        showToast(editorLang === 'fa' ? 'تصویر بارگذاری شد' : 'Image uploaded');
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.inspectExperienceImage = function(idx) {
+      const exp = currentData.experience[idx];
+      if (!exp || !exp.image) return;
+      const title = `${exp.role || 'Role'} @ ${exp.company || 'Company'}`;
+      openEditorLightbox(exp.image, title, { type: 'experience', idx }, 'contain');
+    };
+
+    window.removeExperience = function(idx) {
+      const msg = editorLang === 'fa'
+        ? `آیا از حذف این سابقه کاری مطمئن هستید؟`
+        : `Remove this career role?`;
+      if (confirm(msg)) {
+        currentData.experience.splice(idx, 1);
+        saveLocal();
+        renderExperienceList();
+      }
+    };
+
+    document.getElementById('btn-add-experience').addEventListener('click', () => {
+      if (!currentData.experience) currentData.experience = [];
+      const isFa = editorLang === 'fa';
+      currentData.experience.push({
+        id: 'exp_' + Date.now(),
+        role: isFa ? 'طراح ارشد بازی' : 'Senior Game Designer',
+        company: isFa ? 'استودیو بازی‌سازی' : 'Game Studio',
+        period: isFa ? '۱۴۰۴ - اکنون' : '2025 - Present',
+        description: isFa ? 'طراحی مکانیک‌ها، هدایت سناریو و تدوین مستندات فنی بازی.' : 'Designed gameplay systems, narrative flow, and authored technical design documentation.',
+        tags: isFa ? ['گیم‌دیزاین', 'مکانیک'] : ['Game Design', 'Mechanics'],
+        image: ''
+      });
+      saveLocal();
+      renderExperienceList();
+      showToast(isFa ? 'موقعیت شغلی جدید اضافه شد' : 'New career role added');
+    });
+
+    function bindColorSync(pickerId, textId) {
+      const picker = document.getElementById(pickerId);
+      const text = document.getElementById(textId);
+      picker.addEventListener('input', () => {
+        text.value = picker.value;
+      });
+      text.addEventListener('input', () => {
+        if (/^#[0-9A-Fa-f]{6}$/.test(text.value)) {
+          picker.value = text.value;
+        }
+      });
+    }
+    bindColorSync('theme-accent-color', 'theme-accent-text');
+    bindColorSync('theme-red-color', 'theme-red-text');
+    bindColorSync('theme-blue-color', 'theme-blue-text');
+    bindColorSync('theme-bg-color', 'theme-bg-text');
+
+    function gatherAllData() {
+      if (!currentData) return;
+      if (!currentData.hero) currentData.hero = {};
+      if (!currentData.header) currentData.header = {};
+      if (!currentData.theme) currentData.theme = {};
+      if (!currentData.specs) currentData.specs = {};
+      if (!currentData.about) currentData.about = {};
+      if (!currentData.contact) currentData.contact = {};
+
+      // Avatar & Telemetry
+      currentData.hero.avatar = document.getElementById('hero-avatar').value;
+      currentData.hero.avatarFit = document.getElementById('hero-avatar-fit').value;
+      currentData.hero.level = document.getElementById('hero-level').value;
+      currentData.hero.roleTag = document.getElementById('hero-role').value;
+      currentData.hero.server = document.getElementById('hero-server').value;
+      currentData.header.ping = document.getElementById('header-ping').value;
+
+      currentData.header.gamerTag = document.getElementById('header-gamertag').value;
+      currentData.header.status = document.getElementById('header-status').value;
+
+      currentData.theme.accentColor = document.getElementById('theme-accent-text').value;
+      currentData.theme.accentRed = document.getElementById('theme-red-text').value;
+      currentData.theme.accentBlue = document.getElementById('theme-blue-text').value;
+      currentData.theme.bgColor = document.getElementById('theme-bg-text').value;
+
+      currentData.hero.tagline = document.getElementById('hero-tagline').value;
+      currentData.hero.headline = document.getElementById('hero-headline').value;
+      currentData.hero.bio = document.getElementById('hero-bio').value;
+      currentData.hero.primaryCta = document.getElementById('hero-primary-cta').value;
+      currentData.hero.secondaryCta = document.getElementById('hero-secondary-cta').value;
+
+      const statValInputs = document.querySelectorAll('.stat-val-input');
+      const statLblInputs = document.querySelectorAll('.stat-lbl-input');
+      const newStats = [];
+      statValInputs.forEach((valIn, i) => {
+        newStats.push({
+          value: valIn.value,
+          label: statLblInputs[i] ? statLblInputs[i].value : ''
+        });
+      });
+      currentData.hero.stats = newStats;
+
+      currentData.specs.title = document.getElementById('specs-title').value;
+      currentData.specs.subtitle = document.getElementById('specs-subtitle').value;
+
+      currentData.about.title = document.getElementById('about-title').value;
+      currentData.about.subtitle = document.getElementById('about-subtitle').value;
+      currentData.about.text = document.getElementById('about-text').value;
+      currentData.about.quote = document.getElementById('about-quote').value;
+
+      currentData.contact.email = document.getElementById('contact-email').value;
+      currentData.contact.discord = document.getElementById('contact-discord').value;
+      currentData.contact.phone = document.getElementById('contact-phone').value;
+      currentData.contact.instagram = document.getElementById('contact-instagram').value;
+      currentData.contact.github = document.getElementById('contact-github').value;
+      currentData.contact.location = document.getElementById('contact-location').value;
+      currentData.contact.copyright = document.getElementById('contact-copyright').value;
+    }
+
+    function saveLocal() {
+      gatherAllData();
+      if (editorLang === 'fa') {
+        faData = JSON.parse(JSON.stringify(currentData));
+        localStorage.setItem('GAMING_DATA_FA_LOCAL', JSON.stringify(faData));
+      } else {
+        enData = JSON.parse(JSON.stringify(currentData));
+        localStorage.setItem('GAMING_DATA_LOCAL', JSON.stringify(enData));
+      }
+    }
+
+    document.addEventListener('focusout', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+        saveLocal();
+      }
+    });
+
+    // Language Toggle Button Listener
+    document.getElementById('btn-editor-lang').addEventListener('click', () => {
+      saveLocal(); // Persist active changes before switching
+      editorLang = (editorLang === 'en') ? 'fa' : 'en';
+      try {
+        localStorage.setItem('GAMING_PORTFOLIO_EDITOR_LANG', editorLang);
+      } catch (e) {}
+      currentData = (editorLang === 'fa') ? faData : enData;
+      updateEditorLanguageUI();
+      populateForm();
+      const t = getT();
+      showToast(t.switchedToast);
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      const t = getT();
+      if (confirm(t.confirmReset)) {
+        if (editorLang === 'fa') {
+          localStorage.removeItem('GAMING_DATA_FA_LOCAL');
+          faData = JSON.parse(JSON.stringify(window.GAMING_DATA_FA || {}));
+          currentData = faData;
+        } else {
+          localStorage.removeItem('GAMING_DATA_LOCAL');
+          enData = JSON.parse(JSON.stringify(window.GAMING_DATA || {}));
+          currentData = enData;
+        }
+        populateForm();
+        showToast(t.resetToast);
+      }
+    });
+
+    document.getElementById('btn-save').addEventListener('click', () => {
+      saveLocal();
+      const t = getT();
+      const jsContent = `window.GAMING_DATA = ${JSON.stringify(enData, null, 2)};\n\nwindow.GAMING_DATA_FA = ${JSON.stringify(faData, null, 2)};\n`;
+      const blob = new Blob([jsContent], { type: 'text/javascript;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.js';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(t.savedToast);
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    // Tactical Lightbox Inspector for Editor
+    let activeLightboxContext = null; // { type: 'avatar' } or { type: 'project', index: idx }
+    let activeLightboxFit = 'contain';
+
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxBackdrop = document.getElementById('lightbox-backdrop');
+    const lightboxWrapper = document.getElementById('lightbox-media-wrapper');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxRes = document.getElementById('lightbox-res');
+    const lightboxContextInfo = document.getElementById('lightbox-context-info');
+    const btnFitScreen = document.getElementById('btn-fit-screen');
+    const btnFillScreen = document.getElementById('btn-fill-screen');
+    const btnOriginalSize = document.getElementById('btn-original-size');
+    const btnApplyFitMode = document.getElementById('btn-apply-fit-mode');
+    const btnCloseLightbox = document.getElementById('btn-close-lightbox');
+
+    function openEditorLightbox(src, title, context, currentFit) {
+      if (!src || src.trim() === '') {
+        showToast('No image uploaded yet. Click Upload Image first.');
+        return;
+      }
+      activeLightboxContext = context;
+      activeLightboxFit = currentFit || 'contain';
+      lightboxImg.src = src;
+      lightboxTitle.textContent = title || 'Image View';
+      lightboxContextInfo.textContent = context.type === 'avatar' 
+        ? 'Target: Avatar Portrait' 
+        : (context.type === 'gallery' 
+            ? `Target: Project #${context.projIdx + 1} Gallery Photo #${context.gIdx + 1}` 
+            : (context.type === 'experience'
+                ? `Target: Experience #${context.idx + 1}`
+                : `Target: Project #${context.index + 1}`));
+      if (btnApplyFitMode) {
+        btnApplyFitMode.style.display = (context.type === 'gallery' || context.type === 'experience') ? 'none' : 'inline-flex';
+      }
+      
+      setEditorLightboxMode(activeLightboxFit === 'cover' ? 'fill' : 'fit');
+      updateApplyButtonText();
+      
+      lightboxModal.classList.add('active');
+      lightboxModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      lightboxImg.onload = function() {
+        if (lightboxRes) {
+          lightboxRes.textContent = `${this.naturalWidth} × ${this.naturalHeight} PX`;
+        }
+      };
+    }
+
+    function closeEditorLightbox() {
+      lightboxModal.classList.remove('active');
+      lightboxModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      activeLightboxContext = null;
+    }
+
+    function setEditorLightboxMode(mode) {
+      lightboxWrapper.classList.remove('mode-fit', 'mode-fill', 'mode-original');
+      btnFitScreen.classList.remove('active');
+      btnFillScreen.classList.remove('active');
+      btnOriginalSize.classList.remove('active');
+
+      if (mode === 'fit') {
+        lightboxWrapper.classList.add('mode-fit');
+        btnFitScreen.classList.add('active');
+        activeLightboxFit = 'contain';
+      } else if (mode === 'fill') {
+        lightboxWrapper.classList.add('mode-fill');
+        btnFillScreen.classList.add('active');
+        activeLightboxFit = 'cover';
+      } else if (mode === 'original') {
+        lightboxWrapper.classList.add('mode-original');
+        btnOriginalSize.classList.add('active');
+      }
+      updateApplyButtonText();
+    }
+
+    function updateApplyButtonText() {
+      if (btnApplyFitMode) {
+        btnApplyFitMode.textContent = activeLightboxFit === 'cover' 
+          ? 'Apply Mode: Fill Frame' 
+          : 'Apply Mode: Fit to Frame';
+      }
+    }
+
+    btnFitScreen.addEventListener('click', () => setEditorLightboxMode('fit'));
+    btnFillScreen.addEventListener('click', () => setEditorLightboxMode('fill'));
+    btnOriginalSize.addEventListener('click', () => setEditorLightboxMode('original'));
+    btnCloseLightbox.addEventListener('click', closeEditorLightbox);
+    lightboxBackdrop.addEventListener('click', closeEditorLightbox);
+
+    btnApplyFitMode.addEventListener('click', () => {
+      if (!activeLightboxContext) return;
+      if (activeLightboxContext.type === 'avatar') {
+        document.getElementById('hero-avatar-fit').value = activeLightboxFit;
+        currentData.hero.avatarFit = activeLightboxFit;
+        updateAvatarPreview();
+        saveLocal();
+        showToast(`Avatar fit mode set to: ${activeLightboxFit === 'cover' ? 'Fill Frame' : 'Fit to Frame'}`);
+      } else if (activeLightboxContext.type === 'project') {
+        const idx = activeLightboxContext.index;
+        if (currentData.projects[idx]) {
+          currentData.projects[idx].fit = activeLightboxFit;
+          saveLocal();
+          renderProjectsList();
+          showToast(`Project #${idx + 1} fit mode set to: ${activeLightboxFit === 'cover' ? 'Fill Frame' : 'Fit to Frame'}`);
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightboxModal.classList.contains('active')) return;
+      if (e.key === 'Escape') closeEditorLightbox();
+      if (e.key === 'f' || e.key === 'F') {
+        if (lightboxWrapper.classList.contains('mode-fit')) {
+          setEditorLightboxMode('fill');
+        } else {
+          setEditorLightboxMode('fit');
+        }
+      }
+    });
+
+    window.inspectAvatarImage = function() {
+      const src = document.getElementById('hero-avatar').value;
+      const fit = document.getElementById('hero-avatar-fit').value;
+      if (!src || src.trim() === '') {
+        document.getElementById('avatar-file-input').click();
+        return;
+      }
+      openEditorLightbox(src, 'Gamer Avatar / Portrait', { type: 'avatar' }, fit);
+    };
+
+    window.inspectProjectImage = function(idx) {
+      if (currentData.projects[idx]) {
+        const p = currentData.projects[idx];
+        if (!p.image || p.image.trim() === '') {
+          const fileIn = document.getElementById(`file-proj-${idx}`);
+          if (fileIn) fileIn.click();
+          return;
+        }
+        openEditorLightbox(p.image, p.title || `Project #${idx + 1}`, { type: 'project', index: idx }, p.fit || 'contain');
+      }
+    };
+
+    document.getElementById('btn-inspect-avatar').addEventListener('click', inspectAvatarImage);
+    document.getElementById('avatar-preview-wrap').addEventListener('click', inspectAvatarImage);
+
+    initData();
+  </script>
+</body>
+</html>
